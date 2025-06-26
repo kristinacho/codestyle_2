@@ -1,19 +1,15 @@
 /*
- * Продолжение задачи №3 создание списка
- * Все динамические структуры данных реализовывать через классы. Не использовать STL.  Для каждой динамической структуры должен быть предусмотрен
- * стандартный набор методов - добавления/удаления/вывода элементов. Во всех задачах обязательно
- * наличие дружественного интерфейса. Ввод данных с клавиатуры.
- *
- * Дан односвязный линейный список и указатель на голову списка P1. Необходимо
- * вставить значение M перед каждым вторым элементом списка, и вывести ссылку на последний
- * элемент полученного списка P2. При нечетном числе элементов исходного списка в конец
- * списка вставлять не надо.
-*/
-
+ * РџСЂРѕРґРѕР»Р¶РµРЅРёРµ Р·Р°РґР°РЅРёСЏ в„–3 (РЎРѕР·РґР°РЅРёРµ СЃРїРёСЃРєР°)
+ * РћСЃРЅРѕРІРЅР°СЏ РїСЂРѕРіСЂР°РјРјР° РґР»СЏ РґРµРјРѕРЅСЃС‚СЂР°С†РёРё СЂР°Р±РѕС‚С‹ СЃРѕ СЃРїРёСЃРєРѕРј.
+ * РџРѕР·РІРѕР»СЏРµС‚ СЃРѕР·РґР°С‚СЊ СЃРїРёСЃРѕРє, Р·Р°РїРѕР»РЅРёС‚СЊ РµРіРѕ Р·РЅР°С‡РµРЅРёСЏРјРё,
+ * РІСЃС‚Р°РІРёС‚СЊ СЌР»РµРјРµРЅС‚ РїРµСЂРµРґ РєР°Р¶РґС‹Рј РІС‚РѕСЂС‹Рј СЌР»РµРјРµРЅС‚РѕРј Рё
+ * РІС‹РІРµСЃС‚Рё РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РїРѕСЃР»РµРґРЅРµРј СЌР»РµРјРµРЅС‚Рµ.
+ */
 
 #include "list.h"
 #include <iostream>
 #include <limits>
+#include <string>
 
 using namespace std;
 
@@ -26,9 +22,8 @@ int getPositiveInteger(const string& prompt) {
         if (cin.fail() || value <= 0) {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Ошибка! Введите положительное число: ";
-        }
-        else {
+            cout << "РћС€РёР±РєР°! Р’РІРµРґРёС‚Рµ РїРѕР»РѕР¶РёС‚РµР»СЊРЅРѕРµ С‡РёСЃР»Рѕ: ";
+        } else {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return value;
         }
@@ -44,9 +39,8 @@ int getInteger(const string& prompt) {
         if (cin.fail()) {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Ошибка! Введите целое число: ";
-        }
-        else {
+            cout << "РћС€РёР±РєР°! Р’РІРµРґРёС‚Рµ С†РµР»РѕРµ С‡РёСЃР»Рѕ: ";
+        } else {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return value;
         }
@@ -54,42 +48,52 @@ int getInteger(const string& prompt) {
 }
 
 int main() {
-    LinkedList list = nullptr;
+    LinkedListPtr list = nullptr;
+    int n = 0;
+    int M = 0;
+    void* lastNodeAddr = nullptr;
+    int lastNodeValue = 0;
+    int value = 0;
+    bool success = true;
 
-    try {
-        int n = getPositiveInteger("Введите количество элементов в списке: ");
-
-        cout << "Введите элементы списка:\n";
-        for (int i = 0; i < n; ++i) {
-            int value = getInteger("Элемент " + to_string(i + 1) + ": ");
-            list.append(value);
-        }
-
-        cout << "\nИсходный список: ";
-        list.display();
-
-        int M = getInteger("\nВведите значение M для вставки: ");
-        list.insertBeforeEverySecond(M);
-
-        cout << "\nСписок после вставки: ";
-        list.display();
-
-        void* lastNodeAddr = list.getLastNodeAddress();
-        int lastNodeValue = list.getLastNodeValue();
-
-        if (lastNodeAddr != nullptr) {
-            cout << "\nАдрес последнего элемента: " << lastNodeAddr
-                << "\nЗначение последнего элемента: " << lastNodeValue << endl;
-        }
-        else {
-            cout << "\nСписок пуст." << endl;
-        }
-
-    }
-    catch (const exception& e) {
-        cerr << "Ошибка: " << e.what() << endl;
+    list = createList();
+    if (list == nullptr) {
+        cout << "РћС€РёР±РєР°: РЅРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ СЃРїРёСЃРѕРє. РџСЂРѕРіСЂР°РјРјР° Р·Р°РІРµСЂС€РµРЅР°." << endl;
         return 1;
     }
 
+    n = getPositiveInteger("Р’РІРµРґРёС‚Рµ РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃРїРёСЃРєРµ: ");
+
+    cout << "Р’РІРµРґРёС‚Рµ СЌР»РµРјРµРЅС‚С‹ СЃРїРёСЃРєР°:\n";
+    for (i = 0; i < n; ++i) {
+        value = getInteger("Р­Р»РµРјРµРЅС‚ " + to_string(i + 1) + ": ");
+        success = append(list, value);
+        if (!success) {
+            cout << "РћС€РёР±РєР° РїСЂРё РґРѕР±Р°РІР»РµРЅРёРё СЌР»РµРјРµРЅС‚Р°. РџСЂРѕРіСЂР°РјРјР° Р·Р°РІРµСЂС€РµРЅР°." << endl;
+            destroyList(list);
+            return 1;
+        }
+    }
+
+    cout << "\nРСЃС…РѕРґРЅС‹Р№ СЃРїРёСЃРѕРє: ";
+    displayList(list);
+
+    M = getInteger("\nР’РІРµРґРёС‚Рµ Р·РЅР°С‡РµРЅРёРµ M РґР»СЏ РІСЃС‚Р°РІРєРё: ");
+    insertBeforeEverySecond(list, M);
+
+    cout << "\nРЎРїРёСЃРѕРє РїРѕСЃР»Рµ РІСЃС‚Р°РІРєРё: ";
+    displayList(list);
+
+    lastNodeAddr = getLastNodeAddress(list);
+    lastNodeValue = getLastNodeValue(list);
+
+    if (lastNodeAddr != nullptr) {
+        cout << "\nРђРґСЂРµСЃ РїРѕСЃР»РµРґРЅРµРіРѕ СЌР»РµРјРµРЅС‚Р°: " << lastNodeAddr
+             << "\nР—РЅР°С‡РµРЅРёРµ РїРѕСЃР»РµРґРЅРµРіРѕ СЌР»РµРјРµРЅС‚Р°: " << lastNodeValue << endl;
+    } else {
+        cout << "\nРЎРїРёСЃРѕРє РїСѓСЃС‚." << endl;
+    }
+
+    destroyList(list);
     return 0;
 }
