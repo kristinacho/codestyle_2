@@ -1,51 +1,120 @@
+/*
+ * Продолжение задачи №3 создание списка
+ * Все динамические структуры данных реализовывать через классы. Не использовать STL.  Для каждой динамической структуры должен быть предусмотрен
+ * стандартный набор методов - добавления/удаления/вывода элементов. Во всех задачах обязательно
+ * наличие дружественного интерфейса. Ввод данных с клавиатуры.
+ *
+ * Дан односвязный линейный список и указатель на голову списка P1. Необходимо
+ * вставить значение M перед каждым вторым элементом списка, и вывести ссылку на последний
+ * элемент полученного списка P2. При нечетном числе элементов исходного списка в конец
+ * списка вставлять не надо.
+*/
+
+
 #include "list.h"
 #include <iostream>
+#include <limits>
 
 using namespace std;
 
-LinkedList::LinkedList() : head(nullptr), tail(nullptr) {}
+struct Node {
+    int data = 0;
+    Node* next = nullptr;
+    
+    explicit Node(int value) : data(value) {}
+};
 
-LinkedList::~LinkedList() {
-    clear();
+struct LinkedList {
+    Node* head = nullptr;
+    Node* tail = nullptr;
+};
+
+LinkedListPtr createList() {
+    LinkedList* list = new (nothrow) LinkedList();
+    if (list == nullptr) {
+        cout << "Ошибка: не удалось выделить память для списка" << endl;
+        return nullptr;
+    }
+    return list;
 }
 
-void LinkedList::append(int value) {
-    Node* newNode = new Node(value);
-    if (isEmpty()) {
-        head = tail = newNode;
+void destroyList(LinkedListPtr list) {
+    if (list == nullptr) {
+        cout << "Предупреждение: попытка удалить nullptr список" << endl;
+        return;
     }
-    else {
-        tail->next = newNode;
-        tail = newNode;
+    
+    Node* current = list->head;
+    while (current != nullptr) {
+        Node* toDelete = current;
+        current = current->next;
+        delete toDelete;
     }
+    delete list;
 }
 
-void LinkedList::insertBeforeEverySecond(int M) {
-    if (isEmpty() || head->next == nullptr) return;
+bool append(LinkedListPtr list, int value) {
+    if (list == nullptr) {
+        cout << "Ошибка: список не инициализирован" << endl;
+        return false;
+    }
+    
+    Node* newNode = new (nothrow) Node(value);
+    if (newNode == nullptr) {
+        cout << "Ошибка: не удалось выделить память для нового узла" << endl;
+        return false;
+    }
+    
+    if (list->head == nullptr) {
+        list->head = list->tail = newNode;
+    } else {
+        list->tail->next = newNode;
+        list->tail = newNode;
+    }
+    return true;
+}
 
-    Node* current = head;
+void insertBeforeEverySecond(LinkedListPtr list, int M) {
+    if (list == nullptr) {
+        cout << "Ошибка: список не инициализирован" << endl;
+        return;
+    }
+    if (list->head == nullptr || list->head->next == nullptr) {
+        return;
+    }
+
+    Node* current = list->head;
     int position = 1;
 
     while (current != nullptr && current->next != nullptr) {
         if (position % 2 == 1) {
-            Node* newNode = new Node(M);
+            Node* newNode = new (nothrow) Node(M);
+            if (newNode == nullptr) {
+                cout << "Ошибка: не удалось вставить элемент" << endl;
+                return;
+            }
+            
             newNode->next = current->next;
             current->next = newNode;
             current = newNode->next;
 
             if (current == nullptr) {
-                tail = newNode;
+                list->tail = newNode;
             }
-        }
-        else {
+        } else {
             current = current->next;
         }
         position++;
     }
 }
 
-void LinkedList::display() const {
-    Node* current = head;
+void displayList(LinkedListPtr list) {
+    if (list == nullptr) {
+        cout << "Список не инициализирован" << endl;
+        return;
+    }
+    
+    Node* current = list->head;
     while (current != nullptr) {
         cout << current->data << " ";
         current = current->next;
@@ -53,25 +122,26 @@ void LinkedList::display() const {
     cout << endl;
 }
 
-void* LinkedList::getLastNodeAddress() const {
-    return static_cast<void*>(tail);
-}
-
-int LinkedList::getLastNodeValue() const {
-    return tail ? tail->data : -1; // -1 ��� ������ �������� �� ���������
-}
-
-
-void LinkedList::clear() {
-    while (head != nullptr) {
-        Node* temp = head;
-        head = head->next;
-        delete temp;
+void* getLastNodeAddress(LinkedListPtr list) {
+    if (list == nullptr || list->tail == nullptr) {
+        cout << "Список пуст или не инициализирован" << endl;
+        return nullptr;
     }
-    tail = nullptr;
+    return static_cast<void*>(list->tail);
 }
 
+int getLastNodeValue(LinkedListPtr list) {
+    if (list == nullptr || list->tail == nullptr) {
+        cout << "Список пуст или не инициализирован" << endl;
+        return -1;
+    }
+    return list->tail->data;
+}
 
-bool LinkedList::isEmpty() const {
-    return head == nullptr;
+bool isEmpty(LinkedListPtr list) {
+    if (list == nullptr) {
+        cout << "Список не инициализирован" << endl;
+        return true;
+    }
+    return list->head == nullptr;
 }
