@@ -21,18 +21,50 @@
 
 typedef struct Stack* StackPtr;
 
+/**
+ * @brief Создает новый пустой стек
+ * @return Указатель на созданный стек
+ */
 StackPtr createStack();
 
+/**
+ * @brief Уничтожает стек и освобождает всю связанную с ним память
+ * @param s Указатель на стек для уничтожения
+ */
 void destroyStack(StackPtr s);
 
+/**
+ * @brief Добавляет элемент на вершину стека
+ * @param s Указатель на стек
+ * @param value Значение для добавления
+ */
 void push(StackPtr s, int value);
 
+/**
+ * @brief Удаляет элемент с вершины стека
+ * @param s Указатель на стек
+ * @throws std::runtime_error если стек пуст
+ */
 void pop(StackPtr s);
 
+/**
+ * @brief Возвращает значение верхнего элемента стека без его удаления
+ * @param s Указатель на стек
+ * @return Значение верхнего элемента
+ */
 int top(StackPtr s);
 
+/**
+ * @brief Проверяет, является ли стек пустым
+ * @param s Указатель на стек
+ * @return true если стек пуст, false в противном случае
+ */
 bool isEmpty(StackPtr s);
 
+/**
+ * @brief Выводит содержимое стека в стандартный вывод
+ * @param s Указатель на стек
+ */
 void display(StackPtr s);
 
 #endif // STACK_H
