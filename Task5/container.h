@@ -14,6 +14,9 @@
 #ifndef CONTAINER_H
 #define CONTAINER_H
 
+class Deque;
+class List;
+
 typedef Deque* DequePtr;
 typedef List* ListPtr;
 
