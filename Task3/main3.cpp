@@ -69,7 +69,7 @@ int main() {
     n = getPositiveInteger("Введите количество элементов в списке: ");
 
     cout << "Введите элементы списка:\n";
-    for (i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i) {
         value = getInteger("Элемент " + to_string(i + 1) + ": ");
         success = append(list, value);
         if (!success) {
