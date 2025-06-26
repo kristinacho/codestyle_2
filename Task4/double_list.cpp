@@ -1,41 +1,73 @@
-/*
- * Продолжение задания №4 двусвязный список
- * Дан двусвязный линейный список и указатель первый элемент этого
- * списка. Все элементы списка хранят различные между собой значения. Необходимо
- * вывести значения элементов списка, которые находятся между наименьшим и
- * наибольшим элементами списка, в том порядке, в каком они находятся в исходном
- * списке. Использовать процедуры.
- *
- * Все динамические структуры данных реализовывать через классы. Не использовать STL.  Для каждой динамической структуры должен быть предусмотрен
- * стандартный набор методов - добавления/удаления/вывода элементов.
- * Во всех задачах обязательно наличие дружественного интерфейса. Ввод данных с клавиатуры.
- */
+
 
 #include "double_list.h"
 #include <iostream>
+#include <limits>
 
 using namespace std;
 
-DoublyLinkedList::DoublyLinkedList() : head(nullptr), tail(nullptr) {}
+struct Node {
+    int value = 0;
+    Node* prev = nullptr;
+    Node* next = nullptr;
+    
+    explicit Node(int val) : value(val) {}
+};
 
-DoublyLinkedList::~DoublyLinkedList() {
-    clear();
+struct DoublyLinkedList {
+    Node* head = nullptr;
+    Node* tail = nullptr;
+};
+
+DoublyLinkedListPtr CreateList() {
+    DoublyLinkedList* list = new (nothrow) DoublyLinkedList();
+    if (list == nullptr) {
+        cout << "РћС€РёР±РєР°: РЅРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ СЃРїРёСЃРѕРє" << endl;
+    }
+    return list;
 }
 
-void DoublyLinkedList::append(int value) {
-    Node* newNode = new Node(value);
-    if (isEmpty()) {
-        head = tail = newNode;
+void DestroyList(DoublyLinkedListPtr list) {
+    if (list == nullptr) return;
+    
+    Node* current = list->head;
+    while (current != nullptr) {
+        Node* temp = current;
+        current = current->next;
+        delete temp;
     }
-    else {
-        tail->next = newNode;
-        newNode->prev = tail;
-        tail = newNode;
-    }
+    delete list;
 }
 
-void DoublyLinkedList::display() const {
-    Node* current = head;
+bool Append(DoublyLinkedListPtr list, int value) {
+    if (list == nullptr) {
+        cout << "РћС€РёР±РєР°: СЃРїРёСЃРѕРє РЅРµ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ" << endl;
+        return false;
+    }
+    
+    Node* newNode = new (nothrow) Node(value);
+    if (newNode == nullptr) {
+        cout << "РћС€РёР±РєР°: РЅРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ СѓР·РµР»" << endl;
+        return false;
+    }
+    
+    if (list->head == nullptr) {
+        list->head = list->tail = newNode;
+    } else {
+        list->tail->next = newNode;
+        newNode->prev = list->tail;
+        list->tail = newNode;
+    }
+    return true;
+}
+
+void DisplayList(const DoublyLinkedListPtr list) {
+    if (list == nullptr || list->head == nullptr) {
+        cout << "РЎРїРёСЃРѕРє РїСѓСЃС‚" << endl;
+        return;
+    }
+    
+    Node* current = list->head;
     while (current != nullptr) {
         cout << current->value << " ";
         current = current->next;
@@ -43,15 +75,15 @@ void DoublyLinkedList::display() const {
     cout << endl;
 }
 
-void DoublyLinkedList::printBetweenMinMax() const {
-    if (isEmpty() || head == tail) {
-        cout << "Недостаточно элементов в списке!" << endl;
+void PrintBetweenMinMax(const DoublyLinkedListPtr list) {
+    if (list == nullptr || list->head == nullptr || list->head == list->tail) {
+        cout << "РќРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ СЌР»РµРјРµРЅС‚РѕРІ РІ СЃРїРёСЃРєРµ!" << endl;
         return;
     }
 
-    Node* minNode = head;
-    Node* maxNode = head;
-    Node* current = head->next;
+    Node* minNode = list->head;
+    Node* maxNode = list->head;
+    Node* current = list->head->next;
 
     while (current != nullptr) {
         if (current->value < minNode->value) minNode = current;
@@ -60,21 +92,20 @@ void DoublyLinkedList::printBetweenMinMax() const {
     }
 
     if (minNode == maxNode) {
-        cout << "Все элементы одинаковые!" << endl;
+        cout << "Р’СЃРµ СЌР»РµРјРµРЅС‚С‹ РѕРґРёРЅР°РєРѕРІС‹Рµ!" << endl;
         return;
     }
 
     Node* start = minNode;
     Node* end = maxNode;
 
-    // Определяем порядок следования min и max
     if (minNode->value > maxNode->value ||
         (minNode->value == maxNode->value && minNode->next == maxNode)) {
         start = maxNode;
         end = minNode;
     }
 
-    cout << "Элементы между " << start->value << " и " << end->value << ": ";
+    cout << "Р­Р»РµРјРµРЅС‚С‹ РјРµР¶РґСѓ " << start->value << " Рё " << end->value << ": ";
 
     bool elementsFound = false;
     current = start->next;
@@ -85,20 +116,11 @@ void DoublyLinkedList::printBetweenMinMax() const {
     }
 
     if (!elementsFound) {
-        cout << "отсутствуют";
+        cout << "РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‚";
     }
     cout << endl;
 }
 
-void DoublyLinkedList::clear() {
-    while (head != nullptr) {
-        Node* temp = head;
-        head = head->next;
-        delete temp;
-    }
-    tail = nullptr;
-}
-
-bool DoublyLinkedList::isEmpty() const {
-    return head == nullptr;
+bool IsEmpty(const DoublyLinkedListPtr list) {
+    return list == nullptr || list->head == nullptr;
 }
