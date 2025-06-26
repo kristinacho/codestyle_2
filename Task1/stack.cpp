@@ -15,73 +15,90 @@
  *  элемента стека считается значение его поля Data
  */
 
-
 #include "stack.h"
 #include <iostream>
-#include <stdexcept>
 
 using namespace std;
 
 struct Node {
-    int data;
-    Node* next;
-    Node(int value) : data(value), next(nullptr) {}
+    int data = 0;
+    Node* next = nullptr;
+    explicit Node(int val) : data(val) {}
 };
 
 struct Stack {
-    Node* topPtr;
-    int count;
-    
-    Stack() : topPtr(nullptr), count(0) {}
-    ~Stack() {
-        while (topPtr != nullptr) {
-            Node* temp = topPtr;
-            topPtr = topPtr->next;
-            delete temp;
-        }
-    }
+    Node* topPtr = nullptr;
+    int count = 0;
 };
 
 StackPtr createStack() {
-    return new Stack();
+    Stack* s = new (nothrow) Stack();
+    if (!s) {
+        cout << "Ошибка: не удалось создать стек" << endl;
+    }
+    return s;
 }
 
 void destroyStack(StackPtr s) {
+    if (!s) return;
+    
+    while (pop(s)) {}
     delete s;
 }
 
-void push(StackPtr s, int value) {
-    Node* newNode = new Node(value);
+bool push(StackPtr s, int value) {
+    if (!s) {
+        cout << "Ошибка: невалидный указатель на стек" << endl;
+        return false;
+    }
+
+    Node* newNode = new (nothrow) Node(value);
+    if (!newNode) {
+        cout << "Ошибка: не удалось выделить память для элемента" << endl;
+        return false;
+    }
+
     newNode->next = s->topPtr;
     s->topPtr = newNode;
     s->count++;
+    return true;
 }
 
-void pop(StackPtr s) {
-    if (isEmpty(s)) {
-        throw runtime_error("Stack is empty");
+bool pop(StackPtr s) {
+    if (!s || isEmpty(s)) {
+        cout << "Ошибка: стек пуст или невалиден" << endl;
+        return false;
     }
 
     Node* temp = s->topPtr;
     s->topPtr = s->topPtr->next;
     delete temp;
     s->count--;
+    return true;
 }
 
-int top(StackPtr s) {
-    if (isEmpty(s)) {
-        throw runtime_error("Stack is empty");
+bool top(StackPtr s, int& outValue) {
+    if (!s || isEmpty(s)) {
+        cout << "Ошибка: стек пуст или невалиден" << endl;
+        return false;
     }
-    return s->topPtr->data;
+
+    outValue = s->topPtr->data;
+    return true;
 }
 
 bool isEmpty(StackPtr s) {
-    return s->topPtr == nullptr;
+    return !s || !s->topPtr;
 }
 
 void display(StackPtr s) {
+    if (!s) {
+        cout << "Ошибка: стек не существует" << endl;
+        return;
+    }
+
     Node* current = s->topPtr;
-    while (current != nullptr) {
+    while (current) {
         cout << current->data << "\n";
         current = current->next;
     }
