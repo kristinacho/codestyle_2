@@ -26,112 +26,60 @@
 
 using namespace std;
 
-struct Node {
-    int data = 0;
-    Node* next = nullptr;
-    explicit Node(int val) : data(val) {}
-};
+Queue::Queue() : head(nullptr), tail(nullptr) {}
 
-struct Queue {
-    Node* head = nullptr;
-    Node* tail = nullptr;
-};
-
-QueuePtr createQueue() {
-    Queue* q = new (nothrow) Queue();
-    if (!q) {
-        cout << "Ошибка: не удалось создать очередь" << endl;
-    }
-    return q;
+Queue::~Queue() {
+    int temp;
+    while (pop(temp));
 }
 
-void destroyQueue(QueuePtr q) {
-    if (!q) return;
-    
-    int tempValue = 0;
-    while (pop(q, tempValue)) {}
-    delete q;
-}
-
-bool push(QueuePtr q, int value) {
-    if (!q) {
-        cout << "Ошибка: невалидный указатель на очередь" << endl;
-        return false;
-    }
-
-    Node* newNode = new (nothrow) Node(value);
-    if (!newNode) {
-        cout << "Ошибка: не удалось выделить память для элемента" << endl;
-        return false;
-    }
-
-    if (isEmpty(q)) {
-        q->head = q->tail = newNode;
+void Queue::push(int value) {
+    Node* newNode = new Node(value);
+    if (isEmpty()) {
+        head = tail = newNode;
     } else {
-        q->tail->next = newNode;
-        q->tail = newNode;
+        tail->next = newNode;
+        tail = newNode;
     }
-    return true;
 }
 
-bool pop(QueuePtr q, int& outValue) {
-    if (!q || isEmpty(q)) {
-        cout << "Ошибка: очередь пуста или невалидна" << endl;
-        return false;
-    }
+bool Queue::pop(int& value) {
+    if (isEmpty()) return false;
 
-    Node* temp = q->head;
-    outValue = q->head->data;
-    q->head = q->head->next;
+    Node* temp = head;
+    value = head->data;
+    head = head->next;
 
-    if (!q->head) {
-        q->tail = nullptr;
+    if (head == nullptr) {
+        tail = nullptr;
     }
 
     delete temp;
     return true;
 }
 
-bool isEmpty(QueuePtr q) {
-    return !q || !q->head;
-}
-
-void displayQueue(QueuePtr q) {
-    if (!q) {
-        cout << "Ошибка: очередь не существует" << endl;
-        return;
-    }
-
-    Node* current = q->head;
-    while (current) {
+void Queue::display() const {
+    Node* current = head;
+    while (current != nullptr) {
         cout << current->data << " ";
         current = current->next;
     }
     cout << endl;
 }
 
-void processUntilEven(QueuePtr q) {
-    if (!q) {
-        cout << "Ошибка: очередь не существует" << endl;
-        return;
-    }
-
-    int value = 0;
-    while (!isEmpty(q) && (q->head->data % 2 != 0)) {
-        if (!pop(q, value)) {
-            cout << "Ошибка при извлечении элемента" << endl;
-            return;
-        }
+void Queue::processUntilEven() {
+    int value;
+    while (!isEmpty() && (head->data % 2 != 0)) {
+        pop(value);
         cout << value << " ";
     }
 }
 
-void getQueueAddresses(QueuePtr q) {
-    if (!q) {
-        cout << "Ошибка: очередь не существует" << endl;
-        return;
-    }
+bool Queue::isEmpty() const {
+    return head == nullptr;
+}
 
-    cout << "Адрес начала: " << static_cast<void*>(q->head) << endl;
-    cout << "Адрес конца: " << static_cast<void*>(q->tail) << endl;
+void Queue::getHeadAndTailAddresses() const {
+    cout << "Адрес начала: " << head << endl;
+    cout << "Адрес конца: " << tail << endl;
 }
