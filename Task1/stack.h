@@ -19,52 +19,36 @@
 #ifndef STACK_H
 #define STACK_H
 
-typedef struct Stack* StackPtr;
+#include <iostream>
+#include <string>
 
-/**
- * @brief Создает новый пустой стек
- * @return Указатель на созданный стек
- */
-StackPtr createStack();
+using namespace std;
 
-/**
- * @brief Уничтожает стек и освобождает всю связанную с ним память
- * @param s Указатель на стек для уничтожения
- */
-void destroyStack(StackPtr s);
+struct Node {
+    int data;
+    Node* next;
+    explicit Node(int value) : data(value), next(nullptr) {}
+};
 
-/**
- * @brief Добавляет элемент на вершину стека
- * @param s Указатель на стек
- * @param value Значение для добавления
- */
-void push(StackPtr s, int value);
+class Stack {
+public:
+    Stack() : topPtr(nullptr), count(0) {}
+    ~Stack();
 
-/**
- * @brief Удаляет элемент с вершины стека
- * @param s Указатель на стек
- * @throws std::runtime_error если стек пуст
- */
-void pop(StackPtr s);
+    void push(int value);
+    void pop();
+    int top() const;
+    bool isEmpty() const;
+    int size() const;
 
-/**
- * @brief Возвращает значение верхнего элемента стека без его удаления
- * @param s Указатель на стек
- * @return Значение верхнего элемента
- */
-int top(StackPtr s);
+    friend ostream& operator<<(ostream& os, const Stack& stack);
+    friend istream& operator>>(istream& is, Stack& stack);
 
-/**
- * @brief Проверяет, является ли стек пустым
- * @param s Указатель на стек
- * @return true если стек пуст, false в противном случае
- */
-bool isEmpty(StackPtr s);
+    void display() const;
 
-/**
- * @brief Выводит содержимое стека в стандартный вывод
- * @param s Указатель на стек
- */
-void display(StackPtr s);
+private:
+    Node* topPtr;
+    int count;
+};
 
 #endif // STACK_H
