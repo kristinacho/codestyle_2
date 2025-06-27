@@ -11,50 +11,39 @@
  * Во всех задачах обязательно наличие дружественного интерфейса. Ввод данных с клавиатуры.
  */
 
-#ifndef DOUBLE_LIST_H
-#define DOUBLE_LIST_H
+#ifndef LIST_H
+#define LIST_H
 
-/**
- * @brief Указатель на двусвязный список
- */
-typedef struct DoublyLinkedList* DoublyLinkedListPtr;
+#include <iostream>
+#include <ostream>
 
-/**
- * @brief Создает новый пустой двусвязный список
- * @return Указатель на созданный список или NULL при ошибке выделения памяти
- */
-DoublyLinkedListPtr CreateList();
+struct DoublyNode {
+    int value;
+    DoublyNode* prev;
+    DoublyNode* next;
+    explicit DoublyNode(int val) : value(val), prev(nullptr), next(nullptr) {}
+};
 
-/**
- * @brief Уничтожает список и освобождает все связанные ресурсы
- */
-void DestroyList(DoublyLinkedListPtr list);
+class DoublyLinkedList {
+public:
+    DoublyLinkedList();
+    ~DoublyLinkedList();
 
-/**
- * @brief Добавляет новый элемент в конец списка
- * @param list Указатель на список
- * @param value Значение для добавления
- * @return true - элемент успешно добавлен, false
- */
-bool Append(DoublyLinkedListPtr list, int value);
+   
+    void append(int value);            
+    void clear();                     
+    bool isEmpty() const;         
 
-/**
- * @brief Выводит содержимое списка в стандартный поток вывода
- * @param list Указатель на список строки
- */
-void DisplayList(const DoublyLinkedListPtr list);
+   
+    void printBetweenMinMax() const; 
 
-/**
- * @brief Находит и выводит элементы между минимальным и максимальным значениями
- * @param list Указатель на список
- */
-void PrintBetweenMinMax(const DoublyLinkedListPtr list);
+   
+    friend std::ostream& operator<<(std::ostream& os, const DoublyLinkedList& list);
+    friend std::istream& operator>>(std::istream& is, DoublyLinkedList& list);
 
-/**
- * @brief Проверяет, пуст ли список
- * @param list Указатель на список
- * @return true если список пуст или невалиден, false если содержит элементы
- */
-bool IsEmpty(const DoublyLinkedListPtr list);
+private:
+    DoublyNode* head;  
+    DoublyNode* tail;  
+};
 
-#endif // DOUBLE_LIST_H
+#endif // LIST_H
