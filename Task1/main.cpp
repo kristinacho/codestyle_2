@@ -32,8 +32,7 @@ int getPositiveInteger(const char* prompt) {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "Ошибка! Введите положительное число: ";
-        }
-        else {
+        } else {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return value;
         }
@@ -50,8 +49,7 @@ int getInteger(const char* prompt) {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "Ошибка! Введите целое число: ";
-        }
-        else {
+        } else {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return value;
         }
@@ -61,39 +59,32 @@ int getInteger(const char* prompt) {
 int main() {
     setlocale(LC_ALL, "Russian");
 
-    StackPtr stack = createStack();
+    Stack stack = nullptr;
     try {
         int n = getPositiveInteger("Введите количество элементов стека: ");
 
         for (int i = 0; i < n; ++i) {
             int num = getInteger("Введите элемент стека: ");
-            push(stack, num);
+            stack.push(num);
         }
 
         cout << "Содержимое стека:\n";
-        display(stack);
+        stack.display();
 
-        if (!isEmpty(stack)) {
-            cout << "Первый элемент стека: " << top(stack) << "\n";
-            cout << "Адрес вершины стека: " << stack->topPtr << "\n";
-            
-            pop(stack);
-            
-            if (isEmpty(stack)) {
-                cout << "Стек теперь пуст (P2 = nullptr)\n";
-            }
-            else {
-                cout << "Новый верхний элемент: " << top(stack) << "\n";
-                cout << "Адрес новой вершины стека (P2): " << stack->topPtr << "\n";
+        if (!stack.isEmpty()) {
+            cout << "Первый элемент стека: " << stack.top() << "\n";
+            stack.pop();
+
+            if (stack.isEmpty()) {
+                cout << "Стек теперь пуст.\n";
+            } else {
+                cout << "Новый верхний элемент: " << stack.top() << "\n";
             }
         }
-    }
-    catch (const exception& e) {
+    } catch (const exception& e) {
         cerr << "Ошибка: " << e.what() << "\n";
-        destroyStack(stack);
         return 1;
     }
 
-    destroyStack(stack);
     return 0;
 }
