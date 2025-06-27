@@ -24,7 +24,6 @@
 #include "queue.h"
 #include <iostream>
 #include <limits>
-#include <string>
 
 using namespace std;
 
@@ -65,36 +64,33 @@ int getInteger(const string& prompt) {
 int main() {
     setlocale(LC_ALL, "Russian");
 
-    QueuePtr queue = createQueue();
-    if (!queue) {
-        cout << "Не удалось создать очередь" << endl;
+    Queue queue = nullptr;
+    try {
+        int n = getPositiveInteger("Введите количество элементов очереди: ");
+
+        cout << "Введите элементы очереди:\n";
+        for (int i = 0; i < n; ++i) {
+            int num = getInteger("Элемент " + to_string(i+1) + ": ");
+            queue.push(num);
+        }
+
+        cout << "\nИсходная очередь: ";
+        queue.display();
+
+        cout << "Извлеченные элементы: ";
+        queue.processUntilEven();
+        cout << endl;
+
+        cout << "Оставшаяся очередь: ";
+        queue.display();
+
+        cout << "\nСостояние указателей:\n";
+        queue.getHeadAndTailAddresses();
+
+    } catch (const exception& e) {
+        cerr << "Ошибка: " << e.what() << endl;
         return 1;
     }
 
-    int n = getPositiveInteger("Введите количество элементов очереди: ");
-
-    cout << "Введите элементы очереди:\n";
-    for (int i = 0; i < n; ++i) {
-        int num = getInteger("Элемент " + to_string(i + 1) + ": ");
-        if (!push(queue, num)) {
-            destroyQueue(queue);
-            return 1;
-        }
-    }
-
-    cout << "\nИсходная очередь: ";
-    displayQueue(queue);
-
-    cout << "Извлеченные элементы: ";
-    processUntilEven(queue);
-    cout << endl;
-
-    cout << "Оставшаяся очередь: ";
-    displayQueue(queue);
-
-    cout << "\nСостояние указателей:\n";
-    getQueueAddresses(queue);
-
-    destroyQueue(queue);
     return 0;
 }
