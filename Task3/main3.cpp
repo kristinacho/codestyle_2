@@ -10,10 +10,10 @@
  * списка вставлять не надо.
 */
 
+
 #include "list.h"
 #include <iostream>
 #include <limits>
-#include <string>
 
 using namespace std;
 
@@ -52,52 +52,40 @@ int getInteger(const string& prompt) {
 }
 
 int main() {
-    LinkedListPtr list = nullptr;
-    int n = 0;
-    int M = 0;
-    void* lastNodeAddr = nullptr;
-    int lastNodeValue = 0;
-    int value = 0;
-    bool success = true;
+    LinkedList list = nullptr;
 
-    list = createList();
-    if (list == nullptr) {
-        cout << "Ошибка: не удалось создать список. Программа завершена." << endl;
+    try {
+        int n = getPositiveInteger("Введите количество элементов в списке: ");
+
+        cout << "Введите элементы списка:\n";
+        for (int i = 0; i < n; ++i) {
+            int value = getInteger("Элемент " + to_string(i+1) + ": ");
+            list.append(value);
+        }
+
+        cout << "\nИсходный список: ";
+        list.display();
+
+        int M = getInteger("\nВведите значение M для вставки: ");
+        list.insertBeforeEverySecond(M);
+
+        cout << "\nСписок после вставки: ";
+        list.display();
+
+        void* lastNodeAddr = list.getLastNodeAddress();
+        int lastNodeValue = list.getLastNodeValue();
+
+        if (lastNodeAddr != nullptr) {
+            cout << "\nАдрес последнего элемента: " << lastNodeAddr
+                 << "\nЗначение последнего элемента: " << lastNodeValue << endl;
+        } else {
+            cout << "\nСписок пуст." << endl;
+        }
+
+    } catch (const exception& e) {
+        cerr << "Ошибка: " << e.what() << endl;
         return 1;
     }
 
-    n = getPositiveInteger("Введите количество элементов в списке: ");
-
-    cout << "Введите элементы списка:\n";
-    for (int i = 0; i < n; ++i) {
-        value = getInteger("Элемент " + to_string(i + 1) + ": ");
-        success = append(list, value);
-        if (!success) {
-            cout << "Ошибка при добавлении элемента. Программа завершена." << endl;
-            destroyList(list);
-            return 1;
-        }
-    }
-
-    cout << "\nИсходный список: ";
-    displayList(list);
-
-    M = getInteger("\nВведите значение M для вставки: ");
-    insertBeforeEverySecond(list, M);
-
-    cout << "\nСписок после вставки: ";
-    displayList(list);
-
-    lastNodeAddr = getLastNodeAddress(list);
-    lastNodeValue = getLastNodeValue(list);
-
-    if (lastNodeAddr != nullptr) {
-        cout << "\nАдрес последнего элемента: " << lastNodeAddr
-             << "\nЗначение последнего элемента: " << lastNodeValue << endl;
-    } else {
-        cout << "\nСписок пуст." << endl;
-    }
-
-    destroyList(list);
     return 0;
 }
