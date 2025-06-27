@@ -23,59 +23,34 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-typedef struct Queue* QueuePtr;
+#include <iostream>
+#include <ostream>
 
-/**
- * @brief Создает новую пустую очередь
- * @return Указатель на очередь или nullptr при ошибке
- */
-QueuePtr createQueue();
+struct QueueNode {
+    int data;
+    QueueNode* next;
+    explicit QueueNode(int value) : data(value), next(nullptr) {}
+};
 
-/**
- * @brief Уничтожает очередь и освобождает память
- * @param q Указатель на очередь
- */
-void destroyQueue(QueuePtr q);
+class Queue {
+public:
+    Queue();
+    ~Queue();
 
-/**
- * @brief Добавляет элемент в очередь
- * @param q Указатель на очередь
- * @param value Значение для добавления
- * @return true при успехе, false при ошибке
- */
-bool push(QueuePtr q, int value);
+    void enqueue(int value);
+    bool dequeue(int& value);
+    bool isEmpty() const;
 
-/**
- * @brief Извлекает элемент из очереди
- * @param q Указатель на очередь
- * @param outValue Ссылка для сохранения извлеченного значения
- * @return true при успехе, false если очередь пуста
- */
-bool pop(QueuePtr q, int& outValue);
+ 
+    void processUntilEven();
+    void getEndpoints() const;
 
-/**
- * @brief Проверяет, пуста ли очередь
- * @param q Указатель на очередь
- * @return true если очередь пуста или невалидна
- */
-bool isEmpty(QueuePtr q);
+    friend std::ostream& operator<<(std::ostream& os, const Queue& queue);
+    friend std::istream& operator>>(std::istream& is, Queue& queue);
 
-/**
- * @brief Выводит содержимое очереди
- * @param q Указатель на очередь
- */
-void displayQueue(QueuePtr q);
-
-/**
- * @brief Извлекает элементы до первого четного
- * @param q Указатель на очередь
- */
-void processUntilEven(QueuePtr q);
-
-/**
- * @brief Выводит адреса начала и конца очереди
- * @param q Указатель на очередь
- */
-void getQueueAddresses(QueuePtr q);
+private:
+    QueueNode* head;
+    QueueNode* tail;
+};
 
 #endif // QUEUE_H
