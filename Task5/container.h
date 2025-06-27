@@ -14,170 +14,136 @@
 #ifndef CONTAINER_H
 #define CONTAINER_H
 
-class Deque;
-class List;
+#include <iostream>
+#include <iterator>
 
-typedef Deque* DequePtr;
-typedef List* ListPtr;
+struct DequeNode {
+    int value;
+    DequeNode* prev;
+    DequeNode* next;
+    explicit DequeNode(int val) : value(val), prev(nullptr), next(nullptr) {}
+};
 
-/**
- * @brief Создает новый пустой дек.
- * @return Указатель на созданный дек или nullptr при ошибке выделения памяти.
- */
-DequePtr CreateDeque();
+struct ListNode {
+    int value;
+    ListNode* prev;
+    ListNode* next;
+    explicit ListNode(int val) : value(val), prev(nullptr), next(nullptr) {}
+};
 
-/**
- * @brief Уничтожает дек и освобождает все связанные ресурсы.
- * @param dq Указатель на дек.
- */
-void DestroyDeque(DequePtr dq);
+class Deque {
+public:
+    class Iterator;
+    class ReverseIterator;
+    
+    Deque();
+    ~Deque();
 
-/**
- * @brief Добавляет элемент в конец дека.
- * @param dq Указатель на дек.
- * @param value Значение для добавления.
- */
-void PushBackDeque(DequePtr dq, int value);
+    void pushBack(int value);
+    void pushFront(int value);
+    int popBack();
+    int popFront();
+    void clear();
 
-/**
- * @brief Добавляет элемент в начало дека.
- * @param dq Указатель на дек.
- * @param value Значение для добавления.
- */
-void PushFrontDeque(DequePtr dq, int value);
 
-/**
- * @brief Удаляет и возвращает элемент из конца дека.
- * @param dq Указатель на дек.
- * @return Удаленное значение или 0 в случае ошибки (дек пуст/nullptr).
- */
-int PopBackDeque(DequePtr dq);
+    int back() const;
+    int front() const;
+    int at(int index) const;
+    int size() const;
+    bool empty() const;
 
-/**
- * @brief Удаляет и возвращает элемент из начала дека.
- * @param dq Указатель на дек.
- * @return Удаленное значение или 0 в случае ошибки (дек пуст/nullptr).
- */
-int PopFrontDeque(DequePtr dq);
+    Iterator begin() const;
+    Iterator end() const;
+    ReverseIterator rbegin() const;
+    ReverseIterator rend() const;
 
-/**
- * @brief Возвращает элемент дека по индексу с конца.
- * @param dq Указатель на дек.
- * @param index Индекс элемента (0 для последнего, 1 для предпоследнего и т.д.).
- * @return Значение элемента или 0 в случае ошибки (индекс вне диапазона/nullptr).
- */
-int GetBackDeque(const DequePtr dq, int index);
+    friend std::ostream& operator<<(std::ostream& os, const Deque& deque);
+    friend std::istream& operator>>(std::istream& is, Deque& deque);
 
-/**
- * @brief Возвращает текущий размер дека.
- * @param dq Указатель на дек.
- * @return Количество элементов в деке или 0 в случае ошибки (nullptr).
- */
-int GetDequeSize(const DequePtr dq);
+private:
+    DequeNode* frontPtr;
+    DequeNode* backPtr;
+    int currentSize;
+};
 
-/**
- * @brief Проверяет, пуст ли дек.
- * @param dq Указатель на дек.
- * @return true, если дек пуст или указатель nullptr, false в противном случае.
- */
-bool IsDequeEmpty(const DequePtr dq);
+class List {
+public:
+    class Iterator;
+    class ReverseIterator;
+    
+    List();
+    ~List();
 
-/**
- * @brief Очищает дек, удаляя все элементы.
- * @param dq Указатель на дек.
- */
-void ClearDeque(DequePtr dq);
+    void pushBack(int value);
+    void pushFront(int value);
+    int popBack();
+    int popFront();
+    void clear();
 
-/**
- * @brief Выводит элементы дека в прямом порядке.
- * @param dq Указатель на дек.
- */
-void DisplayDeque(const DequePtr dq);
+    int back() const;
+    int front() const;
+    int size() const;
+    bool empty() const;
 
-/**
- * @brief Выводит элементы дека в обратном порядке.
- * @param dq Указатель на дек.
- */
-void DisplayDequeReverse(const DequePtr dq);
+    void insertBeforeFifthFromEnd(const Deque& deque);
 
-/**
- * @brief Создает новый пустой список.
- * @return Указатель на созданный список или nullptr при ошибке выделения памяти.
- */
-ListPtr CreateList();
+    Iterator begin() const;
+    Iterator end() const;
+    ReverseIterator rbegin() const;
+    ReverseIterator rend() const;
 
-/**
- * @brief Уничтожает список и освобождает все связанные ресурсы.
- * @param lst Указатель на список.
- */
-void DestroyList(ListPtr lst);
 
-/**
- * @brief Добавляет элемент в конец списка.
- * @param lst Указатель на список.
- * @param value Значение для добавления.
- */
-void PushBackList(ListPtr lst, int value);
+    friend std::ostream& operator<<(std::ostream& os, const List& list);
+    friend std::istream& operator>>(std::istream& is, List& list);
 
-/**
- * @brief Добавляет элемент в начало списка.
- * @param lst Указатель на список.
- * @param value Значение для добавления.
- */
-void PushFrontList(ListPtr lst, int value);
+private:
+    ListNode* head;
+    ListNode* tail;
+    int currentSize;
+};
 
-/**
- * @brief Удаляет и возвращает элемент из конца списка.
- * @param lst Указатель на список.
- * @return Удаленное значение или 0 в случае ошибки (список пуст/nullptr).
- */
-int PopBackList(ListPtr lst);
+class Deque::Iterator {
+public:
+    Iterator(DequeNode* node);
+    int operator*() const;
+    Iterator& operator++();
+    bool operator!=(const Iterator& other) const;
+    
+private:
+    DequeNode* current;
+};
 
-/**
- * @brief Удаляет и возвращает элемент из начала списка.
- * @param lst Указатель на список.
- * @return Удаленное значение или 0 в случае ошибки (список пуст/nullptr).
- */
-int PopFrontList(ListPtr lst);
+class Deque::ReverseIterator {
+public:
+    ReverseIterator(DequeNode* node);
+    int operator*() const;
+    ReverseIterator& operator++();
+    bool operator!=(const ReverseIterator& other) const;
+    
+private:
+    DequeNode* current;
+};
 
-/**
- * @brief Проверяет, пуст ли список.
- * @param lst Указатель на список.
- * @return true, если список пуст или указатель nullptr, false в противном случае.
- */
-bool IsListEmpty(const ListPtr lst);
+class List::Iterator {
+public:
+    Iterator(ListNode* node);
+    int operator*() const;
+    Iterator& operator++();
+    bool operator!=(const Iterator& other) const;
+    
+private:
+    ListNode* current;
+};
 
-/**
- * @brief Возвращает текущий размер списка.
- * @param lst Указатель на список.
- * @return Количество элементов в списке или 0 в случае ошибки (nullptr).
- */
-int GetListSize(const ListPtr lst);
-
-/**
- * @brief Очищает список, удаляя все элементы.
- * @param lst Указатель на список.
- */
-void ClearList(ListPtr lst);
-
-/**
- * @brief Выводит элементы списка в прямом порядке.
- * @param lst Указатель на список.
- */
-void DisplayList(const ListPtr lst);
-
-/**
- * @brief Выводит элементы списка в обратном порядке.
- * @param lst Указатель на список.
- */
-void DisplayListReverse(const ListPtr lst);
-
-/**
- * @brief Вставляет последние 5 элементов дека (в обратном порядке) перед пятым с конца элементом списка.
- * @param lst Указатель на список.
- * @param dq Указатель на дек.
- * @return true в случае успешной вставки, false в случае ошибки.
- */
-bool InsertBeforeFifthFromEnd(ListPtr lst, const DequePtr dq);
+class List::ReverseIterator {
+public:
+    ReverseIterator(ListNode* node);
+    int operator*() const;
+    ReverseIterator& operator++();
+    bool operator!=(const ReverseIterator& other) const;
+    
+private:
+    ListNode* current;
+};
 
 #endif // CONTAINER_H
