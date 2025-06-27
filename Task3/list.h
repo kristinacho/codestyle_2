@@ -13,60 +13,37 @@
 #ifndef LIST_H
 #define LIST_H
 
-typedef struct LinkedList* LinkedListPtr;
+#include <iostream>
+#include <ostream>
 
-/**
- * @brief Создает новый пустой список
- * @return Указатель на список или nullptr при ошибке 
- */
-LinkedListPtr createList();
 
-/**
- * @brief Уничтожает список и освобождает память
- * @param list Указатель на список
- */
-void destroyList(LinkedListPtr list);
+struct ListNode {
+    int data;
+    ListNode* next;
+    explicit ListNode(int value) : data(value), next(nullptr) {}
+};
 
-/**
- * @brief Добавляет элемент в конец списка
- * @param list Указатель на список
- * @param value Значение для добавления
- * @return true при успехе, false при ошибке
- */
-bool append(LinkedListPtr list, int value);
+class LinkedList {
+public:
 
-/**
- * @brief Вставляет M перед каждым вторым элементом
- * @param list Указатель на список
- * @param M Значение для вставки
- */
-void insertBeforeEverySecond(LinkedListPtr list, int M);
+    LinkedList();
+    ~LinkedList();
 
-/**
- * @brief Выводит содержимое списка
- * @param list Указатель на список
- */
-void displayList(LinkedListPtr list);
 
-/**
- * @brief Получает адрес последнего элемента списка
- * @param list Указатель на список
- * @return Указатель на последний элемент или nullptr
- */
-void* getLastNodeAddress(LinkedListPtr list);
+    void append(int value);
+    void insertBeforeEverySecond(int M);  
+    void clear();                         
+    bool isEmpty() const;                 
 
-/**
- * @brief Получает значение последнего элемента списка
- * @param list Указатель на список
- * @return Значение элемента или -1 если список пуст
- */
-int getLastNodeValue(LinkedListPtr list);
+    void* getLastNodeAddress() const; 
+    int getLastNodeValue() const;
 
-/**
- * @brief Проверяет, пуст ли список
- * @param list Указатель на список
- * @return true если список пуст или невалиден
- */
-bool isEmpty(LinkedListPtr list);
+    friend std::ostream& operator<<(std::ostream& os, const LinkedList& list);
+    friend std::istream& operator>>(std::istream& is, LinkedList& list);
+
+private:
+    ListNode* head; 
+    ListNode* tail;  
+};
 
 #endif // LIST_H
