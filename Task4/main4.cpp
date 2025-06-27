@@ -14,7 +14,6 @@
 #include "double_list.h"
 #include <iostream>
 #include <limits>
-#include <string>
 
 using namespace std;
 
@@ -54,37 +53,27 @@ int GetInteger(const string& prompt) {
 
 int main() {
     setlocale(LC_ALL, "Russian");
-    
-    DoublyLinkedListPtr list = nullptr;
-    int n = 0;
-    int value = 0;
-    bool success = true;
 
-    list = CreateList();
-    if (list == nullptr) {
-        cout << "Ошибка при создании списка" << endl;
+    DoublyLinkedList list = nullptr;
+    try {
+        int n = GetPositiveInteger("Введите количество элементов в списке: ");
+
+        cout << "Введите элементы списка:\n";
+        for (int i = 0; i < n; ++i) {
+            int value = getInteger("Элемент " + to_string(i+1) + ": ");
+            list.Append(value);
+        }
+
+        cout << "\nСодержимое списка: ";
+        list.Display();
+
+        cout << "\nРезультат:\n";
+        list.PrintBetweenMinMax();
+
+    } catch (const exception& e) {
+        cerr << "Ошибка: " << e.what() << endl;
         return 1;
     }
 
-    n = GetPositiveInteger("Введите количество элементов в списке: ");
-    
-    cout << "Введите элементы списка:\n";
-    for (int i = 0; i < n; ++i) {
-        value = GetInteger("Элемент " + to_string(i + 1) + ": ");
-        success = Append(list, value);
-        if (!success) {
-            cout << "Ошибка при добавлении элемента" << endl;
-            DestroyList(list);
-            return 1;
-        }
-    }
-
-    cout << "\nСодержимое списка: ";
-    DisplayList(list);
-
-    cout << "\nРезультат:\n";
-    PrintBetweenMinMax(list);
-
-    DestroyList(list);
     return 0;
 }
