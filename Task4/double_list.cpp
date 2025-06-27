@@ -13,72 +13,28 @@
 
 #include "double_list.h"
 #include <iostream>
-#include <limits>
 
 using namespace std;
 
-struct Node {
-    int value = 0;
-    Node* prev = nullptr;
-    Node* next = nullptr;
-    
-    explicit Node(int val) : value(val) {}
-};
+DoublyLinkedList::DoublyLinkedList() : head(nullptr), tail(nullptr) {}
 
-struct DoublyLinkedList {
-    Node* head = nullptr;
-    Node* tail = nullptr;
-};
-
-DoublyLinkedListPtr CreateList() {
-    DoublyLinkedList* list = new (nothrow) DoublyLinkedList();
-    if (list == nullptr) {
-        cout << "Ошибка: не удалось создать список" << endl;
-    }
-    return list;
+DoublyLinkedList::~DoublyLinkedList() {
+    clear();
 }
 
-void DestroyList(DoublyLinkedListPtr list) {
-    if (list == nullptr) return;
-    
-    Node* current = list->head;
-    while (current != nullptr) {
-        Node* temp = current;
-        current = current->next;
-        delete temp;
-    }
-    delete list;
-}
-
-bool Append(DoublyLinkedListPtr list, int value) {
-    if (list == nullptr) {
-        cout << "Ошибка: список не инициализирован" << endl;
-        return false;
-    }
-    
-    Node* newNode = new (nothrow) Node(value);
-    if (newNode == nullptr) {
-        cout << "Ошибка: не удалось создать новый узел" << endl;
-        return false;
-    }
-    
-    if (list->head == nullptr) {
-        list->head = list->tail = newNode;
+void DoublyLinkedList::append(int value) {
+    Node* newNode = new Node(value);
+    if (isEmpty()) {
+        head = tail = newNode;
     } else {
-        list->tail->next = newNode;
-        newNode->prev = list->tail;
-        list->tail = newNode;
+        tail->next = newNode;
+        newNode->prev = tail;
+        tail = newNode;
     }
-    return true;
 }
 
-void DisplayList(const DoublyLinkedListPtr list) {
-    if (list == nullptr || list->head == nullptr) {
-        cout << "Список пуст" << endl;
-        return;
-    }
-    
-    Node* current = list->head;
+void DoublyLinkedList::display() const {
+    Node* current = head;
     while (current != nullptr) {
         cout << current->value << " ";
         current = current->next;
@@ -86,15 +42,15 @@ void DisplayList(const DoublyLinkedListPtr list) {
     cout << endl;
 }
 
-void PrintBetweenMinMax(const DoublyLinkedListPtr list) {
-    if (list == nullptr || list->head == nullptr || list->head == list->tail) {
+void DoublyLinkedList::printBetweenMinMax() const {
+    if (isEmpty() || head == tail) {
         cout << "Недостаточно элементов в списке!" << endl;
         return;
     }
 
-    Node* minNode = list->head;
-    Node* maxNode = list->head;
-    Node* current = list->head->next;
+    Node* minNode = head;
+    Node* maxNode = head;
+    Node* current = head->next;
 
     while (current != nullptr) {
         if (current->value < minNode->value) minNode = current;
@@ -110,6 +66,7 @@ void PrintBetweenMinMax(const DoublyLinkedListPtr list) {
     Node* start = minNode;
     Node* end = maxNode;
 
+    // Определяем порядок следования min и max
     if (minNode->value > maxNode->value ||
         (minNode->value == maxNode->value && minNode->next == maxNode)) {
         start = maxNode;
@@ -132,6 +89,15 @@ void PrintBetweenMinMax(const DoublyLinkedListPtr list) {
     cout << endl;
 }
 
-bool IsEmpty(const DoublyLinkedListPtr list) {
-    return list == nullptr || list->head == nullptr;
+void DoublyLinkedList::clear() {
+    while (head != nullptr) {
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+    }
+    tail = nullptr;
+}
+
+bool DoublyLinkedList::isEmpty() const {
+    return head == nullptr;
 }
