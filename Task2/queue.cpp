@@ -26,60 +26,67 @@
 
 using namespace std;
 
-Queue::Queue() : head(nullptr), tail(nullptr) {}
+Queue::Queue() : head_(nullptr), tail_(nullptr) {}
 
 Queue::~Queue() {
     int temp;
-    while (pop(temp));
+    while (dequeue(temp));
 }
 
-void Queue::push(int value) {
-    Node* newNode = new Node(value);
+void Queue::enqueue(int value) {
+    QueueNode* newNode = new QueueNode(value);
     if (isEmpty()) {
-        head = tail = newNode;
+        head_ = tail_ = newNode;
     } else {
-        tail->next = newNode;
-        tail = newNode;
+        tail_->next = newNode;
+        tail_ = newNode;
     }
 }
 
-bool Queue::pop(int& value) {
+bool Queue::dequeue(int& value) {
     if (isEmpty()) return false;
 
-    Node* temp = head;
-    value = head->data;
-    head = head->next;
+    QueueNode* temp = head_;
+    value = head_->data;
+    head_ = head_->next;
 
-    if (head == nullptr) {
-        tail = nullptr;
+    if (head_ == nullptr) {
+        tail_ = nullptr;
     }
 
     delete temp;
     return true;
 }
 
-void Queue::display() const {
-    Node* current = head;
-    while (current != nullptr) {
-        cout << current->data << " ";
-        current = current->next;
-    }
-    cout << endl;
-}
-
 void Queue::processUntilEven() {
     int value;
-    while (!isEmpty() && (head->data % 2 != 0)) {
-        pop(value);
+    while (!isEmpty() && (head_->data % 2 != 0)) {
+        dequeue(value);
         cout << value << " ";
     }
 }
 
 bool Queue::isEmpty() const {
-    return head == nullptr;
+    return head_ == nullptr;
 }
 
-void Queue::getHeadAndTailAddresses() const {
-    cout << "Адрес начала: " << head << endl;
-    cout << "Адрес конца: " << tail << endl;
+void Queue::getEndpoints() const {
+    cout << "Head address: " << head_ << endl;
+    cout << "Tail address: " << tail_ << endl;
+}
+
+std::ostream& operator<<(std::ostream& os, const Queue& queue) {
+    QueueNode* current = queue.head_;
+    while (current != nullptr) {
+        os << current->data << " ";
+        current = current->next;
+    }
+    return os;
+}
+
+std::istream& operator>>(std::istream& is, Queue& queue) {
+    int value;
+    is >> value;
+    queue.enqueue(value);
+    return is;
 }
