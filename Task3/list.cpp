@@ -3,37 +3,37 @@
 
 using namespace std;
 
-LinkedList::LinkedList() : head(nullptr), tail(nullptr) {}
+LinkedList::LinkedList() : head_(nullptr), tail_(nullptr) {}
 
 LinkedList::~LinkedList() {
     clear();
 }
 
 void LinkedList::append(int value) {
-    Node* newNode = new Node(value);
+    ListNode* newNode = new ListNode(value);
     if (isEmpty()) {
-        head = tail = newNode;
+        head_ = tail_ = newNode;
     } else {
-        tail->next = newNode;
-        tail = newNode;
+        tail_->next = newNode;
+        tail_ = newNode;
     }
 }
 
 void LinkedList::insertBeforeEverySecond(int M) {
-    if (isEmpty() || head->next == nullptr) return;
+    if (isEmpty() || head_->next == nullptr) return;
 
-    Node* current = head;
+    ListNode* current = head_;
     int position = 1;
 
     while (current != nullptr && current->next != nullptr) {
         if (position % 2 == 1) {
-            Node* newNode = new Node(M);
+            ListNode* newNode = new ListNode(M);
             newNode->next = current->next;
             current->next = newNode;
             current = newNode->next;
 
             if (current == nullptr) {
-                tail = newNode;
+                tail_ = newNode;
             }
         } else {
             current = current->next;
@@ -42,34 +42,39 @@ void LinkedList::insertBeforeEverySecond(int M) {
     }
 }
 
-void LinkedList::display() const {
-    Node* current = head;
-    while (current != nullptr) {
-        cout << current->data << " ";
-        current = current->next;
+void LinkedList::clear() {
+    while (head_ != nullptr) {
+        ListNode* temp = head_;
+        head_ = head_->next;
+        delete temp;
     }
-    cout << endl;
+    tail_ = nullptr;
+}
+
+bool LinkedList::isEmpty() const {
+    return head_ == nullptr;
 }
 
 void* LinkedList::getLastNodeAddress() const {
-    return static_cast<void*>(tail);
+    return static_cast<void*>(tail_);
 }
 
 int LinkedList::getLastNodeValue() const {
-    return tail ? tail->data : -1; // -1 или другое значение по умолчанию
+    return tail_ ? tail_->data : -1;
 }
 
-
-void LinkedList::clear() {
-    while (head != nullptr) {
-        Node* temp = head;
-        head = head->next;
-        delete temp;
+std::ostream& operator<<(std::ostream& os, const LinkedList& list) {
+    ListNode* current = list.head_;
+    while (current != nullptr) {
+        os << current->data << " ";
+        current = current->next;
     }
-    tail = nullptr;
+    return os;
 }
 
-
-bool LinkedList::isEmpty() const {
-    return head == nullptr;
+std::istream& operator>>(std::istream& is, LinkedList& list) {
+    int value;
+    is >> value;
+    list.append(value);
+    return is;
 }
