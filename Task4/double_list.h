@@ -14,13 +14,16 @@
 #ifndef LIST_H
 #define LIST_H
 
+#ifndef LIST_H
+#define LIST_H
+
 #include <iostream>
 #include <ostream>
 
 struct DoublyNode {
-    int value;
-    DoublyNode* prev;
-    DoublyNode* next;
+    int value = 0;
+    DoublyNode* prev = nullptr;
+    DoublyNode* next = nullptr;
     explicit DoublyNode(int val) : value(val), prev(nullptr), next(nullptr) {}
 };
 
@@ -29,21 +32,18 @@ public:
     DoublyLinkedList();
     ~DoublyLinkedList();
 
-   
-    void append(int value);            
-    void clear();                     
-    bool isEmpty() const;         
+    void append(int value);
+    void clear();
+    bool isEmpty() const;
 
-   
-    void printBetweenMinMax() const; 
+    void printBetweenMinMax() const;
 
-   
     friend std::ostream& operator<<(std::ostream& os, const DoublyLinkedList& list);
     friend std::istream& operator>>(std::istream& is, DoublyLinkedList& list);
 
 private:
-    DoublyNode* head;  
-    DoublyNode* tail;  
+    DoublyNode* head_ = nullptr;
+    DoublyNode* tail_ = nullptr;
 };
 
 #endif // LIST_H
