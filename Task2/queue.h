@@ -41,7 +41,6 @@ public:
     bool dequeue(int& value);
     bool isEmpty() const;
 
- 
     void processUntilEven();
     void getEndpoints() const;
 
@@ -49,8 +48,8 @@ public:
     friend std::istream& operator>>(std::istream& is, Queue& queue);
 
 private:
-    QueueNode* head;
-    QueueNode* tail;
+    QueueNode* head_;
+    QueueNode* tail_;
 };
 
 #endif // QUEUE_H
