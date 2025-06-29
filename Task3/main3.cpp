@@ -14,6 +14,7 @@
 #include "list.h"
 #include <iostream>
 #include <limits>
+#include <string>
 
 using namespace std;
 
@@ -52,7 +53,7 @@ int getInteger(const string& prompt) {
 }
 
 int main() {
-    LinkedList list = nullptr;
+    LinkedList list;
 
     try {
         int n = getPositiveInteger("Введите количество элементов в списке: ");
@@ -63,14 +64,12 @@ int main() {
             list.append(value);
         }
 
-        cout << "\nИсходный список: ";
-        list.display();
+        cout << "\nИсходный список: " << list << endl;
 
         int M = getInteger("\nВведите значение M для вставки: ");
         list.insertBeforeEverySecond(M);
 
-        cout << "\nСписок после вставки: ";
-        list.display();
+        cout << "\nСписок после вставки: " << list << endl;
 
         void* lastNodeAddr = list.getLastNodeAddress();
         int lastNodeValue = list.getLastNodeValue();
