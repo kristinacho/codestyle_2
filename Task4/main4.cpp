@@ -14,10 +14,11 @@
 #include "double_list.h"
 #include <iostream>
 #include <limits>
+#include <string>
 
 using namespace std;
 
-int GetPositiveInteger(const string& prompt) {
+int getPositiveInteger(const string& prompt) {
     int value = 0;
     while (true) {
         cout << prompt;
@@ -34,7 +35,7 @@ int GetPositiveInteger(const string& prompt) {
     }
 }
 
-int GetInteger(const string& prompt) {
+int getInteger(const string& prompt) {
     int value = 0;
     while (true) {
         cout << prompt;
@@ -54,21 +55,20 @@ int GetInteger(const string& prompt) {
 int main() {
     setlocale(LC_ALL, "Russian");
 
-    DoublyLinkedList list = nullptr;
+    DoublyLinkedList list;
     try {
-        int n = GetPositiveInteger("Введите количество элементов в списке: ");
+        int n = getPositiveInteger("Введите количество элементов в списке: ");
 
         cout << "Введите элементы списка:\n";
         for (int i = 0; i < n; ++i) {
             int value = getInteger("Элемент " + to_string(i+1) + ": ");
-            list.Append(value);
+            list.append(value);
         }
 
-        cout << "\nСодержимое списка: ";
-        list.Display();
+        cout << "\nСодержимое списка: " << list << endl;
 
         cout << "\nРезультат:\n";
-        list.PrintBetweenMinMax();
+        list.printBetweenMinMax();
 
     } catch (const exception& e) {
         cerr << "Ошибка: " << e.what() << endl;
