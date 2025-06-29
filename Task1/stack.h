@@ -47,8 +47,8 @@ public:
     void display() const;
 
 private:
-    Node* topPtr;
-    int count;
+    Node* top_;
+    int count_;
 };
 
 #endif // STACK_H
