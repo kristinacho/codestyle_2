@@ -64,28 +64,28 @@ int getInteger(const string& prompt) {
 int main() {
     setlocale(LC_ALL, "Russian");
 
-    Queue queue = nullptr;
+    Queue queue;
     try {
         int n = getPositiveInteger("Введите количество элементов очереди: ");
 
         cout << "Введите элементы очереди:\n";
         for (int i = 0; i < n; ++i) {
             int num = getInteger("Элемент " + to_string(i+1) + ": ");
-            queue.push(num);
+            queue.enqueue(num);
         }
 
         cout << "\nИсходная очередь: ";
-        queue.display();
+        cout << queue << endl;
 
         cout << "Извлеченные элементы: ";
         queue.processUntilEven();
         cout << endl;
 
         cout << "Оставшаяся очередь: ";
-        queue.display();
+        cout << queue << endl;
 
         cout << "\nСостояние указателей:\n";
-        queue.getHeadAndTailAddresses();
+        queue.getEndpoints();
 
     } catch (const exception& e) {
         cerr << "Ошибка: " << e.what() << endl;
