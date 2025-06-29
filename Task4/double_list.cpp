@@ -11,7 +11,7 @@
  * Во всех задачах обязательно наличие дружественного интерфейса. Ввод данных с клавиатуры.
  */
 
-#include "list.h"
+#include "double_list.h"
 #include <iostream>
 
 using namespace std;
