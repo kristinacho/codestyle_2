@@ -59,7 +59,9 @@ int getInteger(const char* prompt) {
 int main() {
     setlocale(LC_ALL, "Russian");
 
-    Stack stack = nullptr;
+    Stack stack;
+    int n = 0;
+    int num = 0;
     try {
         int n = getPositiveInteger("Введите количество элементов стека: ");
 
