@@ -16,7 +16,6 @@
 #include <iostream>
 #include <ostream>
 
-
 struct ListNode {
     int data;
     ListNode* next;
@@ -25,25 +24,23 @@ struct ListNode {
 
 class LinkedList {
 public:
-
     LinkedList();
     ~LinkedList();
 
-
     void append(int value);
-    void insertBeforeEverySecond(int M);  
-    void clear();                         
-    bool isEmpty() const;                 
+    void insertBeforeEverySecond(int M);
+    void clear();
+    bool isEmpty() const;
 
-    void* getLastNodeAddress() const; 
+    void* getLastNodeAddress() const;
     int getLastNodeValue() const;
 
     friend std::ostream& operator<<(std::ostream& os, const LinkedList& list);
     friend std::istream& operator>>(std::istream& is, LinkedList& list);
 
 private:
-    ListNode* head; 
-    ListNode* tail;  
+    ListNode* head_;
+    ListNode* tail_;
 };
 
 #endif // LIST_H
