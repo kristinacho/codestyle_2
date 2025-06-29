@@ -15,13 +15,6 @@
  *  элемента стека считается значение его поля Data
  */
 
-
-#ifndef STACK_H
-#define STACK_H
-
-#include <iostream>
-#include <string>
-
 #ifndef STACK_H
 #define STACK_H
 
