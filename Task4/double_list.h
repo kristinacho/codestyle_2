@@ -11,11 +11,8 @@
  * Во всех задачах обязательно наличие дружественного интерфейса. Ввод данных с клавиатуры.
  */
 
-#ifndef LIST_H
-#define LIST_H
-
-#ifndef LIST_H
-#define LIST_H
+#ifndef DOUBLE_LIST_H
+#define DOUBLE_LIST_H
 
 #include <iostream>
 #include <ostream>
@@ -46,4 +43,4 @@ private:
     DoublyNode* tail_ = nullptr;
 };
 
-#endif // LIST_H
+#endif // DOUBLE_LIST_H
