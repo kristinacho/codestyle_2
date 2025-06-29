@@ -17,11 +17,7 @@
 
 #include "stack.h"
 #include <iostream>
-#include <stdexcept>
-
-using namespace std;
-
-Stack::Stack() : topPtr(nullptr), count(0) {}
+#include "stack.h"
 
 Stack::~Stack() {
     while (!isEmpty()) {
@@ -31,37 +27,47 @@ Stack::~Stack() {
 
 void Stack::push(int value) {
     Node* newNode = new Node(value);
-    newNode->next = topPtr;
-    topPtr = newNode;
-    ++count;
+    newNode->next = top_;
+    top_ = newNode;
+    count_++;
 }
 
-void Stack::pop() {
+int Stack::pop() {
     if (isEmpty()) {
-        throw runtime_error("Stack is empty");
+        std::cout << "Error: stack is empty" << std::endl;
+        return -1;
     }
 
-    Node* temp = topPtr;
-    topPtr = topPtr->next;
+    Node* temp = top_;
+    int value = temp->data;
+    top_ = top_->next;
     delete temp;
-    --count;
+    count_--;
+
+    return value;
 }
 
 int Stack::top() const {
     if (isEmpty()) {
-        throw runtime_error("Stack is empty");
+        std::cout << "Error: stack is empty" << std::endl;
+        return -1;
     }
-    return topPtr->data;
+    return top_->data;
 }
 
 bool Stack::isEmpty() const {
-    return topPtr == nullptr;
+    return top_ == nullptr;
 }
 
-void Stack::display() const {
-    Node* current = topPtr;
+int Stack::size() const {
+    return count_;
+}
+
+std::ostream& operator<<(std::ostream& os, const Stack& stack) {
+    Node* current = stack.top_;
     while (current != nullptr) {
-        cout << current->data << "\n";
+        os << current->data << " ";
         current = current->next;
     }
+    return os;
 }
