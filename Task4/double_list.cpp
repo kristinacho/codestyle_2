@@ -11,46 +11,37 @@
  * Во всех задачах обязательно наличие дружественного интерфейса. Ввод данных с клавиатуры.
  */
 
-#include "double_list.h"
+#include "list.h"
 #include <iostream>
 
 using namespace std;
 
-DoublyLinkedList::DoublyLinkedList() : head(nullptr), tail(nullptr) {}
+DoublyLinkedList::DoublyLinkedList() : head_(nullptr), tail_(nullptr) {}
 
 DoublyLinkedList::~DoublyLinkedList() {
     clear();
 }
 
 void DoublyLinkedList::append(int value) {
-    Node* newNode = new Node(value);
+    DoublyNode* newNode = new DoublyNode(value);
     if (isEmpty()) {
-        head = tail = newNode;
+        head_ = tail_ = newNode;
     } else {
-        tail->next = newNode;
-        newNode->prev = tail;
-        tail = newNode;
+        tail_->next = newNode;
+        newNode->prev = tail_;
+        tail_ = newNode;
     }
-}
-
-void DoublyLinkedList::display() const {
-    Node* current = head;
-    while (current != nullptr) {
-        cout << current->value << " ";
-        current = current->next;
-    }
-    cout << endl;
 }
 
 void DoublyLinkedList::printBetweenMinMax() const {
-    if (isEmpty() || head == tail) {
+    if (isEmpty() || head_ == tail_) {
         cout << "Недостаточно элементов в списке!" << endl;
         return;
     }
 
-    Node* minNode = head;
-    Node* maxNode = head;
-    Node* current = head->next;
+    DoublyNode* minNode = head_;
+    DoublyNode* maxNode = head_;
+    DoublyNode* current = head_->next;
 
     while (current != nullptr) {
         if (current->value < minNode->value) minNode = current;
@@ -63,10 +54,9 @@ void DoublyLinkedList::printBetweenMinMax() const {
         return;
     }
 
-    Node* start = minNode;
-    Node* end = maxNode;
+    DoublyNode* start = minNode;
+    DoublyNode* end = maxNode;
 
-    // Определяем порядок следования min и max
     if (minNode->value > maxNode->value ||
         (minNode->value == maxNode->value && minNode->next == maxNode)) {
         start = maxNode;
@@ -90,14 +80,30 @@ void DoublyLinkedList::printBetweenMinMax() const {
 }
 
 void DoublyLinkedList::clear() {
-    while (head != nullptr) {
-        Node* temp = head;
-        head = head->next;
+    while (head_ != nullptr) {
+        DoublyNode* temp = head_;
+        head_ = head_->next;
         delete temp;
     }
-    tail = nullptr;
+    tail_ = nullptr;
 }
 
 bool DoublyLinkedList::isEmpty() const {
-    return head == nullptr;
+    return head_ == nullptr;
+}
+
+std::ostream& operator<<(std::ostream& os, const DoublyLinkedList& list) {
+    DoublyNode* current = list.head_;
+    while (current != nullptr) {
+        os << current->value << " ";
+        current = current->next;
+    }
+    return os;
+}
+
+std::istream& operator>>(std::istream& is, DoublyLinkedList& list) {
+    int value = 0;
+    is >> value;
+    list.append(value);
+    return is;
 }
