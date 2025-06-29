@@ -22,33 +22,34 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
+#ifndef STACK_H
+#define STACK_H
+
+#include <iostream>
 
 struct Node {
-    int data;
-    Node* next;
+    int data = 0;
+    Node* next = nullptr;
     explicit Node(int value) : data(value), next(nullptr) {}
 };
 
 class Stack {
 public:
-    Stack() : topPtr(nullptr), count(0) {}
+    Stack() : top_(nullptr), count_(0) {}
     ~Stack();
 
     void push(int value);
-    void pop();
+    int pop();
     int top() const;
     bool isEmpty() const;
     int size() const;
+    Node* getTopAddress() const { return top_; }
 
-    friend ostream& operator<<(ostream& os, const Stack& stack);
-    friend istream& operator>>(istream& is, Stack& stack);
-
-    void display() const;
+    friend std::ostream& operator<<(std::ostream& os, const Stack& stack);
 
 private:
-    Node* top_;
-    int count_;
+    Node* top_ = nullptr;
+    int count_ = 0;
 };
 
-#endif // STACK_H
+#endif
