@@ -22,82 +22,75 @@
 
 using namespace std;
 
-int getPositiveInteger(const char* prompt) {
-    int value = 0; 
+int getPositiveInteger(const std::string& prompt) {
+    int value = 0;
     while (true) {
-        cout << prompt;
-        cin >> value;
+        std::cout << prompt;
+        std::cin >> value;
 
-        if (cin.fail() || value <= 0) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Ошибка! Введите положительное число: ";
+        if (std::cin.fail() || value <= 0) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Error! Enter positive number: ";
         } else {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             return value;
         }
     }
 }
 
-int getInteger(const char* prompt) {
+int getInteger(const std::string& prompt) {
     int value = 0;
     while (true) {
-        cout << prompt;
-        cin >> value;
+        std::cout << prompt;
+        std::cin >> value;
 
-        if (cin.fail()) {
-            cin.clear(); 
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Ошибка! Введите целое число: ";
+        if (std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Error! Enter integer: ";
         } else {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             return value;
         }
     }
 }
 
 int main() {
-    setlocale(LC_ALL, "Russian");
-
     Stack stack;
+    int n = 0;
+    int num = 0;
+    Node* P1 = nullptr;
+    int D = 0;
+    Node* P2 = nullptr;
 
-    int n_elements_to_create = 0;
-    int current_element_value = 0;
-    void* p1_address = nullptr;
-    int d_value = 0;
-    void* p2_address = nullptr;
+    n = getPositiveInteger("Enter stack size: ");
 
-    n_elements_to_create = getPositiveInteger("Введите количество элементов стека для создания: ");
-
-    for (int i = 0; i < n_elements_to_create; ++i) {
-        current_element_value = getInteger("Введите элемент стека: ");
-        stack.push(current_element_value);
+    for (int i = 0; i < n; ++i) {
+        num = getInteger("Enter element: ");
+        stack.push(num);
     }
 
-    cout << "\n--- Содержимое стека ---\n";
-    stack.display();
+    std::cout << "Stack content: ";
+    std::cout << stack << std::endl;
 
     if (!stack.isEmpty()) {
-        cout << "\n--- Извлечение верхнего элемента ---\n";
+        P1 = stack.getTopAddress();
+        std::cout << "P1 address: " << P1 << std::endl;
 
-        p1_address = static_cast<void*>(stack.getTopAddress());
-        cout << "Адрес P1 текущей вершины стека: " << p1_address << "\n";
+        D = stack.pop();
+        P2 = stack.getTopAddress();
 
-        d_value = stack.pop();
-        cout << "Извлеченное значение D: " << d_value << "\n";
-
-        p2_address = static_cast<void*>(stack.getTopAddress());
-        if (stack.isEmpty()) {
-            p2_address = nullptr;
-        }
-        cout << "Адрес P2 новой вершины стека: " << p2_address << "\n";
+        std::cout << "D value: " << D << std::endl;
+        std::cout << "P2 address: " << P2 << std::endl;
 
         if (stack.isEmpty()) {
-            cout << "Стек теперь пуст.\n";
+            std::cout << "Stack is now empty" << std::endl;
         } else {
-            cout << "Новый верхний элемент: " << stack.top() << "\n";
+            std::cout << "New top: " << stack.top() << std::endl;
+        }
     } else {
-        cout << "\nСтек пуст, нет элементов для извлечения.\n";
+        std::cout << "Stack is empty" << std::endl;
     }
 
     return 0;
